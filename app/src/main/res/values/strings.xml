@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">diploma</string>
+
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="sports_info_placeholder">Here is some news</string>
+
+
+    <string name="empty_not_saved">Word not saved because it is empty.</string>
+
+    <string name="delete">&#9003;</string>
+    <string name="settings">Настройки</string>
+    <string name="my_notes">Мои записки</string>
+    <string name="new_note">Новая запись</string>
+    <string name="choose_theme">Выберите тему</string>
+    <string name="save">Сохранить</string>
+    <string name="enter_new_pin">Введите новый пин-код:</string>
+    <string name="light_theme">светлая тема</string>
+    <string name="dark_theme">темная тема</string>
+    <string name="enter_title">Напишите заголовок</string>
+    <string name="enter_note">Напишите заметку</string>
+    <string name="has_deadline">Есть дедлайн</string>
+    <string name="deadline_date">Дата дедлайна</string>
+    <string name="edit_mode">Редактировать запись</string>
+
+    <string-array name="sports_titles">
+        <item>Baseball</item>
+        <item>Badminton</item>
+        <item>Basketball</item>
+        <item>Bowling</item>
+        <item>Cycling</item>
+        <item>Golf</item>
+        <item>Running</item>
+        <item>Soccer</item>
+        <item>Swimming</item>
+        <item>Table Tennis</item>
+        <item>Tennis</item>
+    </string-array>
+
+    <string-array name="sports_info">
+        <item>Here is some Baseball news!</item>
+        <item>Here is some Badminton news!</item>
+        <item>Here is some Basketball news!</item>
+        <item>Here is some Bowling news!</item>
+        <item>Here is some Cycling news!</item>
+        <item>Here is some Golf news!</item>
+        <item>Here is some Running news!</item>
+        <item>Here is some Soccer news!</item>
+        <item>Here is some Swimming news!</item>
+        <item>Here is some Table Tennis news!</item>
+        <item>Here is some Tennis news!</item>
+    </string-array>
+</resources>
