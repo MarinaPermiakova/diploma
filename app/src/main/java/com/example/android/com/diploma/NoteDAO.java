@@ -22,7 +22,7 @@ public interface NoteDAO {
     @Delete
     void deleteNote(Note note);
 
-    @Query("SELECT * from note_table ORDER BY deadline ASC")
+    @Query("SELECT * from note_table ORDER BY hasdeadline ASC, deadline ASC")
     LiveData<List<Note>> getAllNotes();
 
     @Query("SELECT * from note_table LIMIT 1")

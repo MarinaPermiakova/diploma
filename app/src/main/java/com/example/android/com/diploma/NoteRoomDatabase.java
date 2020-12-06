@@ -39,7 +39,7 @@ public abstract class NoteRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
+    private static final RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback() {
 
                 @Override
@@ -56,17 +56,11 @@ public abstract class NoteRoomDatabase extends RoomDatabase {
 
         private final NoteDAO mDao;
 
-        String[] sportsList = {"Baseball", "Badminton", "Basketball", "Bowling", "Cycling",
-                "Golf", "Running", "Soccer", "Swimming", "Table Tennis", "Tennis"};
-        String[] sportsInfo = {"Here is some Baseball news!", "Here is some Badminton news!",
-                "Here is some Basketball news!", "Here is some Bowling news!",
-                "Here is some Cycling news!", "Here is some Golf news!",
-                " Here is some Running news!", "Here is some Soccer news!", "Here is some Swimming news!",
-                "Here is some Table Tennis news!", "Here is some Tennis news!"};
+        String[] notesTitle = {"Моя первая записка"};
+        String[] noteText = {"Привет!"};
 
         Date currentTime = Calendar.getInstance().getTime();
-        Date[] dates = {currentTime, currentTime,currentTime, currentTime, currentTime, currentTime,
-                currentTime, currentTime, currentTime, currentTime, currentTime};
+        Date[] dates = {currentTime};
         PopulateDbAsync(NoteRoomDatabase db) {
             mDao = db.noteDAO();
         }
@@ -74,8 +68,8 @@ public abstract class NoteRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             if (mDao.getAnyNote().length < 1) {
-                for (int i = 0; i <= sportsList.length - 1; i++) {
-                    Note note = new Note(sportsList[i], sportsInfo[i], dates[i], true);
+                for (int i = 0; i <= notesTitle.length - 1; i++) {
+                    Note note = new Note(notesTitle[i], noteText[i], dates[i], true);
                     mDao.insert(note);
                 }
             }

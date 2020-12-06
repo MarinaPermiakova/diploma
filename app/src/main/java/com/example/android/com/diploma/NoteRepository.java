@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class NoteRepo {
+public class NoteRepository {
 
-    private NoteDAO noteDAO;
-    private LiveData<List<Note>> mAllNotes;
+    private final NoteDAO noteDAO;
+    private final LiveData<List<Note>> mAllNotes;
 
-    NoteRepo(Application application) {
+    NoteRepository(Application application) {
         NoteRoomDatabase db = NoteRoomDatabase.getDatabase(application);
         noteDAO = db.noteDAO();
         mAllNotes = noteDAO.getAllNotes();
@@ -22,21 +22,21 @@ public class NoteRepo {
         return mAllNotes;
     }
 
-    public void insert (Note note) {
+    public void insert(Note note) {
         new insertAsyncTask(noteDAO).execute(note);
     }
 
-    public void update (Note note) {
+    public void update(Note note) {
         new updateAsyncTask(noteDAO).execute(note);
     }
 
-    public void deleteNote(Note note)  {
-        new deleteNotedAsyncTask(noteDAO).execute(note);
+    public void deleteNote(Note note) {
+        new deleteNoteAsyncTask(noteDAO).execute(note);
     }
 
     private static class insertAsyncTask extends AsyncTask<Note, Void, Void> {
 
-        private NoteDAO mAsyncTaskDao;
+        private final NoteDAO mAsyncTaskDao;
 
         insertAsyncTask(NoteDAO dao) {
             mAsyncTaskDao = dao;
@@ -51,7 +51,7 @@ public class NoteRepo {
 
     private static class updateAsyncTask extends AsyncTask<Note, Void, Void> {
 
-        private NoteDAO mAsyncTaskDao;
+        private final NoteDAO mAsyncTaskDao;
 
         updateAsyncTask(NoteDAO dao) {
             mAsyncTaskDao = dao;
@@ -64,10 +64,10 @@ public class NoteRepo {
         }
     }
 
-    private static class deleteNotedAsyncTask extends AsyncTask<Note, Void, Void> {
-        private NoteDAO mAsyncTaskDao;
+    private static class deleteNoteAsyncTask extends AsyncTask<Note, Void, Void> {
+        private final NoteDAO mAsyncTaskDao;
 
-        deleteNotedAsyncTask(NoteDAO dao) {
+        deleteNoteAsyncTask(NoteDAO dao) {
             mAsyncTaskDao = dao;
         }
 

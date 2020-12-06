@@ -8,10 +8,9 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import java.text.ParseException;
 import java.util.Calendar;
 
-public class FirstFragment extends DialogFragment
+public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     @NonNull
@@ -28,10 +27,7 @@ public class FirstFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         DetailActivity activity = (DetailActivity) getActivity();
-        try {
-            activity.processDatePickerResult(year, month, day);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        assert activity != null;
+        activity.processDatePickerResult(year, month, day);
     }
 }

@@ -16,17 +16,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/title"
             android:lines="1"
+            android:ellipsize="end"
             android:padding="8dp"
             style="@style/TextAppearance.AppCompat.Headline"/>
 
 
         <TextView
+            android:id="@+id/newsTitle"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/newsTitle"
-            android:lines="1"
-            android:padding="8dp"
-            style="@style/TextAppearance.AppCompat.Subhead" />
+            android:ellipsize="end"
+            android:linksClickable="true"
+            android:maxLines="3"
+            android:minLines="1"
+            android:padding="8dp" />
 
         <TextView
             android:layout_width="wrap_content"

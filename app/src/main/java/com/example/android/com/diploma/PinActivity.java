@@ -2,48 +2,70 @@ package com.example.android.com.diploma;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+public class PinActivity extends AppCompatActivity implements KeystoreHolder {
 
-public class PinActivity extends AppCompatActivity {
+    private Button btn0;
+    private Button btn1;
+    private Button btn2;
+    private Button btn3;
+    private Button btn4;
+    private Button btn5;
+    private Button btn6;
+    private Button btn7;
+    private Button btn8;
+    private Button btn9;
+    private Button btnDelete;
 
-    Button btn0;
-    Button btn1;
-    Button btn2;
-    Button btn3;
-    Button btn4;
-    Button btn5;
-    Button btn6;
-    Button btn7;
-    Button btn8;
-    Button btn9;
-    Button btnDelete;
-
-    TextView textView1;
-    TextView textView2;
-    TextView textView3;
-    TextView textView4;
-    TextView textView5;
+    private TextView textView1;
+    private TextView textView2;
+    private TextView textView3;
+    private TextView textView4;
+    private TextView textView5;
 
     String pin = "";
-    String savedPin;
-    private static final String FILE_NAME = "pin_code2.txt";
+    private Keystore keystore;
+
+    @Override
+    public void setKeystore(@NonNull Keystore keystore) {
+        this.keystore = keystore;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin);
 
+        if (keystore.hasPin(this)) {
+            Log.d("pinActivity", "hasPin");
+            initViews();
+            btn0.setOnClickListener(click0);
+            btn1.setOnClickListener(click1);
+            btn2.setOnClickListener(click2);
+            btn3.setOnClickListener(click3);
+            btn4.setOnClickListener(click4);
+            btn5.setOnClickListener(click5);
+            btn6.setOnClickListener(click6);
+            btn7.setOnClickListener(click7);
+            btn8.setOnClickListener(click8);
+            btn9.setOnClickListener(click9);
+            btnDelete.setOnClickListener(delete);
+        } else {
+            Intent intent = new Intent(PinActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void initViews() {
         btn0 = findViewById(R.id.button0);
         btn1 = findViewById(R.id.button1);
         btn2 = findViewById(R.id.button2);
@@ -61,194 +83,85 @@ public class PinActivity extends AppCompatActivity {
         textView3 = findViewById(R.id.placeholder3);
         textView4 = findViewById(R.id.placeholder4);
         textView5 = findViewById(R.id.placeholder5);
-
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = openFileInput(FILE_NAME);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Intent intent = new Intent(PinActivity.this, settingsActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
-        try {
-            savedPin = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        btn0.setOnClickListener(click0);
-        btn1.setOnClickListener(click1);
-        btn2.setOnClickListener(click2);
-        btn3.setOnClickListener(click3);
-        btn4.setOnClickListener(click4);
-        btn5.setOnClickListener(click5);
-        btn6.setOnClickListener(click6);
-        btn7.setOnClickListener(click7);
-        btn8.setOnClickListener(click8);
-        btn9.setOnClickListener(click9);
-        btnDelete.setOnClickListener(delete);
     }
 
+    View.OnClickListener click0 = view -> {
+        pin += "0";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
 
-    View.OnClickListener click0 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "0";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }
+    View.OnClickListener click1 = view -> {
+        pin += "1";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click2 = view -> {
+        pin += "2";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click3 = view -> {
+        pin += "3";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click4 = view -> {
+        pin += "4";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click5 = view -> {
+        pin += "5";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click6 = view -> {
+        pin += "6";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click7 = view -> {
+        pin += "7";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click8 = view -> {
+        pin += "8";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
+    };
+
+    View.OnClickListener click9 = view -> {
+        pin += "9";
+        placeholderChangeColor(pin.length());
+        if (pin.length() == 5) startIntentIfPinIsOK(pin);
     };
 
 
-    View.OnClickListener click1 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "1";
+    View.OnClickListener delete = view -> {
+        if (pin != null && pin.length() > 0) {
+            pin = pin.substring(0, pin.length() - 1);
             placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
         }
     };
 
-
-    View.OnClickListener click2 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "2";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+    void startIntentIfPinIsOK(String pin) {
+        if (keystore.checkPin(pin)) {
+            Intent intent = new Intent(PinActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.wrong_pin, Toast.LENGTH_SHORT).show();
         }
-    };
-
-    View.OnClickListener click3 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "3";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click4 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "4";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click5 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "5";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click6 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "6";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click7 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "7";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click8 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "8";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener click9 = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            pin += "9";
-            placeholderChangeColor(pin.length());
-            if (pin.equals(savedPin)) {
-                Intent intent = new Intent(PinActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-
-        }
-    };
-
-    View.OnClickListener delete = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (pin != null && pin.length() > 0) {
-                pin = pin.substring(0, pin.length() - 1);
-            }
-            placeholderChangeColor(pin.length());
-            Toast.makeText(getApplicationContext(), pin, Toast.LENGTH_SHORT).show();
-        }
-    };
+    }
 
     private void placeholderChangeColor(int length) {
         switch (length) {
@@ -258,7 +171,6 @@ public class PinActivity extends AppCompatActivity {
                 textView3.setBackgroundResource(R.drawable.shape2);
                 textView4.setBackgroundResource(R.drawable.shape2);
                 textView5.setBackgroundResource(R.drawable.shape2);
-
                 break;
             case 4:
                 textView1.setBackgroundResource(R.drawable.shape2);
@@ -299,5 +211,4 @@ public class PinActivity extends AppCompatActivity {
                 break;
         }
     }
-
 }

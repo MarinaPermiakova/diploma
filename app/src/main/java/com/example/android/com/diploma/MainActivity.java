@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,56 +46,55 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-        mNoteViewModel.getAllWords().observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(@Nullable final List<Note> notes) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setmNotes(notes);
-            }
-        });
+        mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+        mNoteViewModel.getAllNotes().observe(this, adapter::setNotes);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                startActivityForResult(intent, NEW_NOTE_ACTIVITY_REQUEST_CODE);
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            startActivityForResult(intent, NEW_NOTE_ACTIVITY_REQUEST_CODE);
         });
 
         ItemTouchHelper helper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0,
                         ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                     @Override
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
                         return false;
                     }
 
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
-                                         int direction) {
-                        int position = viewHolder.getAdapterPosition();
-                        Note myNote = adapter.getNoteAtPosition(position);
-                        Toast.makeText(MainActivity.this, "Deleting " +
-                                myNote.getTitle(), Toast.LENGTH_LONG).show();
 
-                        // Delete the word
-                        mNoteViewModel.deleteNote(myNote);
+                    @Override
+                    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        // remove this item from the adapter
+                        new AlertDialog.Builder(viewHolder.itemView.getContext())
+                                .setMessage("Вы хотите удалить записку?")
+                                .setPositiveButton("Да", (dialog, id) -> {
+                                    // position of the item to be deleted
+                                    int position = viewHolder.getAdapterPosition();
+                                    Note myNote = adapter.getNoteAtPosition(position);
+                                    mNoteViewModel.deleteNote(myNote);
+                                    Toast.makeText(MainActivity.this, "Удалено: " +
+                                            myNote.getTitle(), Toast.LENGTH_LONG).show();
+                                })
+                                .setNegativeButton("Нет", (dialog, id) -> {
+                                    // User cancelled the dialog,
+                                    // so we will refresh the adapter to prevent hiding the item from UI
+                                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                                })
+                                .create()
+                                .show();
                     }
                 });
 
         helper.attachToRecyclerView(mRecyclerView);
 
-        adapter.setOnItemClickListener(new NoteListAdapter.ClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Note note = adapter.getNoteAtPosition(position);
-                launchUpdateNoteActivity(note);
-            }
+        adapter.setOnItemClickListener((v, position) -> {
+            Note note = adapter.getNoteAtPosition(position);
+            launchUpdateNoteActivity(note);
         });
     }
 
@@ -112,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       getMenuInflater().inflate(R.menu.menu_main, menu);
-       return true;
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(MainActivity.this, settingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             Date date = new Date();
 
             date.setTime(data.getLongExtra(DetailActivity.EXTRA_REPLY_DEADLINE, -1));
-            Note note = new Note(data.getStringExtra(DetailActivity.EXTRA_REPLY_TITLE), data.getStringExtra(DetailActivity.EXTRA_REPLY_TEXT),
+            Note note = new Note(Objects.requireNonNull(data.getStringExtra(DetailActivity.EXTRA_REPLY_TITLE)), data.getStringExtra(DetailActivity.EXTRA_REPLY_TEXT),
                     date, data.getBooleanExtra(DetailActivity.EXTRA_HAS_DEADLINE, false));
             mNoteViewModel.insert(note);
         } else if (requestCode == UPDATE_NOTE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -145,9 +143,10 @@ public class MainActivity extends AppCompatActivity {
             date.setTime(data.getLongExtra(DetailActivity.EXTRA_REPLY_DEADLINE, -1));
             String note_title = data.getStringExtra(DetailActivity.EXTRA_REPLY_TITLE);
             String note_text = data.getStringExtra(DetailActivity.EXTRA_REPLY_TEXT);
-            Boolean has_deadline = data.getBooleanExtra(DetailActivity.EXTRA_HAS_DEADLINE, false);
+            boolean has_deadline = data.getBooleanExtra(DetailActivity.EXTRA_HAS_DEADLINE, false);
 
             if (id != -1) {
+                assert note_title != null;
                 mNoteViewModel.update(new Note(id, note_title, note_text, date, has_deadline));
             } else {
                 Toast.makeText(this, R.string.empty_not_saved,

@@ -1,6 +1,7 @@
 package com.example.android.com.diploma;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -15,45 +16,50 @@ class Note {
 
     @NonNull
     @ColumnInfo(name = "title")
-    private String title;
+    private final String title;
 
     @NonNull
     @ColumnInfo(name = "info")
-    private String info;
+    private final String info;
 
     @NonNull
     @ColumnInfo(name = "deadline")
-    private Date deadline;
+    private final Date deadline;
 
     @ColumnInfo(name = "hasdeadline")
-    private boolean isDeadline;
+    private final boolean isDeadline;
 
-    Note(String title, String info, Date deadline, boolean isDeadline) {
-        this.id = id;
+    Note(@NonNull String title, @Nullable String info, @Nullable Date deadline, boolean isDeadline) {
         this.title = title;
+        assert info != null;
         this.info = info;
+        assert deadline != null;
         this.deadline = deadline;
         this.isDeadline = isDeadline;
     }
-
 
     @Ignore
-    Note(int id, String title, String info, Date deadline, boolean isDeadline) {
+    Note(int id, @NonNull String title, @Nullable String info, @Nullable Date deadline, boolean isDeadline) {
         this.id = id;
         this.title = title;
+        assert info != null;
         this.info = info;
+        assert deadline != null;
         this.deadline = deadline;
         this.isDeadline = isDeadline;
     }
 
+    @NonNull
     String getTitle() {
         return title;
     }
 
+    @NonNull
     String getInfo() {
         return info;
     }
 
+    @NonNull
     Date getDeadline (){
         return deadline;
     }

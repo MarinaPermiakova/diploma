@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".settingsActivity">
+    tools:context=".SettingsActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -22,6 +22,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextNumberPasswordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,17 +31,21 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:id="@+id/editTextNumberPassword"
         app:passwordToggleEnabled="true"
-        app:errorEnabled="true">
+        app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="5">
+
 
         <com.google.android.material.textfield.TextInputEditText
-
+            android:id="@+id/editTextNumberPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="numberPassword"
-            android:hint="" />
+            android:hint="@string/_hint"
+            android:maxLength="5"
+           />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -54,7 +59,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/TextNumberPasswordLayout"
+        android:visibility="invisible"/>
 
     <View
         android:id="@+id/view"
@@ -66,15 +72,14 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"/>
 
-    <EditText
-        android:id="@+id/editTextText"
+    <TextView
+        android:id="@+id/textViewText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="@string/choose_theme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +94,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText">
+        app:layout_constraintTop_toBottomOf="@+id/textViewText">
 
         <RadioButton
             android:id="@+id/radio_light"

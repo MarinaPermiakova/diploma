@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -19,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 import static com.example.android.com.diploma.MainActivity.EXTRA_DATA_ID;
 import static com.example.android.com.diploma.MainActivity.EXTRA_DATA_UPDATE_NOTE_DEADLINE;
@@ -49,6 +52,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = findViewById(R.id.toolbar__for_detail_activity);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         noteTitle = findViewById(R.id.titleDetail);
         noteText = findViewById(R.id.newsTitleDetail);
@@ -63,20 +68,17 @@ public class DetailActivity extends AppCompatActivity {
             calendar.setVisibility(View.VISIBLE);
         }
 
-        checkDeadline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkDeadline.isChecked()) {
-                    dateTimeOfDeadline.setVisibility(View.VISIBLE);
-                    calendar.setVisibility(View.VISIBLE);
-                } else {
-                    dateTimeOfDeadline.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.INVISIBLE);
-                }
+        checkDeadline.setOnClickListener(view -> {
+            if (checkDeadline.isChecked()) {
+                dateTimeOfDeadline.setVisibility(View.VISIBLE);
+                calendar.setVisibility(View.VISIBLE);
+            } else {
+                dateTimeOfDeadline.setVisibility(View.INVISIBLE);
+                calendar.setVisibility(View.INVISIBLE);
             }
         });
 
-        int id = -1;
+        //int id = -1;
         extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -84,9 +86,9 @@ public class DetailActivity extends AppCompatActivity {
             String title = extras.getString(EXTRA_DATA_UPDATE_NOTE_TITLE, "");
             String text = extras.getString(EXTRA_DATA_UPDATE_NOTE_TEXT, "");
             date = new Date();
-            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             date.setTime(getIntent().getLongExtra(EXTRA_DATA_UPDATE_NOTE_DEADLINE, -1));
-            boolean hasDeadline = extras.getBoolean(EXTRA_DATA_UPDATE_NOTE_HASDEADLINE, false);
+            //boolean hasDeadline = extras.getBoolean(EXTRA_DATA_UPDATE_NOTE_HASDEADLINE, false);
 
             if (!title.isEmpty()) {
                 noteTitle.setText(title);
@@ -94,12 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                 dateTimeOfDeadline.setText(df.format(date));
             }
         }
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePicker(view);
-            }
-        });
+        calendar.setOnClickListener(this::showDatePicker);
     }
 
     @Override
@@ -109,7 +106,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         Intent replyIntent = new Intent();
         if (TextUtils.isEmpty(noteTitle.getText())) {
@@ -126,7 +123,7 @@ public class DetailActivity extends AppCompatActivity {
             Date date2 = new Date();
 
             if (checkDeadline.isChecked()) {
-                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                DateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                 try {
                     date2 = df.parse(dateTimeOfDeadline.getText().toString());
                 } catch (ParseException e) {
@@ -135,6 +132,7 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 date2 = Calendar.getInstance().getTime();
             }
+            assert date2 != null;
             replyIntent.putExtra(EXTRA_REPLY_DEADLINE, date2.getTime());
 
             if (extras != null && extras.containsKey(EXTRA_DATA_ID)) {
@@ -151,11 +149,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void showDatePicker(View view) {
-        DialogFragment newFragment = new FirstFragment();
+        DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    public void processDatePickerResult(int year, int month, int day) throws ParseException {
+    public void processDatePickerResult(int year, int month, int day) {
         String month_string = Integer.toString(month + 1);
         String day_string = Integer.toString(day);
         String year_string = Integer.toString(year);
